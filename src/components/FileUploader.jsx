@@ -22,6 +22,8 @@ import {
 } from "@mui/icons-material";
 import "../assets/FileResult.css";
 
+export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const FileUploader = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -77,7 +79,7 @@ const FileUploader = () => {
     formData.append("html_file", file);
 
     try {
-      const response = await fetch("http://localhost:5000/", {
+      const response = await fetch(`${API}`, {
         method: "POST",
         body: formData,
         credentials: "include",

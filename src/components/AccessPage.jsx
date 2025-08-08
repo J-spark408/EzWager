@@ -14,6 +14,8 @@ import {
 } from "@mui/joy";
 import ForgotPinModal from "./ForgotPinModal";
 
+export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const AccessPage = () => {
   const [email, setEmail] = useState("");
   const [pin, setPin] = useState("");
@@ -51,7 +53,7 @@ const AccessPage = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/check-pin", {
+      const res = await fetch(`${API}/api/check-pin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -166,7 +168,7 @@ const AccessPage = () => {
           <Button
             variant="none"
             size="sm"
-            sx={{ mt: 2, display: "flex", justifySelf: "center", }}
+            sx={{ mt: 2, display: "flex", justifySelf: "center" }}
             onClick={() => setForgotOpen(true)}
           >
             Forgot PIN?

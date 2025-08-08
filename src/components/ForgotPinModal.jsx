@@ -14,6 +14,8 @@ import {
   ModalDialog,
 } from "@mui/joy";
 
+export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const ForgotPinModal = ({ open, onClose, initialEmail = "" }) => {
   const [email, setEmail] = useState(initialEmail);
   const [sending, setSending] = useState(false);
@@ -69,7 +71,7 @@ const ForgotPinModal = ({ open, onClose, initialEmail = "" }) => {
     setSending(true);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/forgot-pin`, {
+      const res = await fetch(`${API}/api/forgot-pin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: normalizedEmail }),
