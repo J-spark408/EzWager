@@ -27,7 +27,7 @@ export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const FileUploader = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState(null); // { pdfUrl, excelUrl }
   const [error, setError] = useState(null);
   const [shake, setShake] = useState(false);
   const fileInputRef = useRef(null);
@@ -39,16 +39,15 @@ const FileUploader = () => {
     const email = localStorage.getItem("email");
     const authTime = localStorage.getItem("authTime");
 
-    const THIRTY_MINUTES = 1 * 60 * 1000; // 30 mins
+    const ONE_MINUTE = 1 * 60 * 1000; // change back to 30 * 60 * 1000 later
     const expired =
-      !authTime || Date.now() - parseInt(authTime, 10) > THIRTY_MINUTES;
+      !authTime || Date.now() - parseInt(authTime, 10) > ONE_MINUTE;
 
     if (!isAuthenticated || expired || !email) {
-      // Clear expired values
       localStorage.removeItem("authenticated");
       localStorage.removeItem("authTime");
       localStorage.removeItem("email");
-      navigate("/"); // Redirect to PIN page
+      navigate("/"); // Redirect to Access page
     }
   }, [navigate]);
 
@@ -58,9 +57,13 @@ const FileUploader = () => {
     setError(null);
   };
 
-  const clearFile = () => {
+  const clearFileInput = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
+  // Helper to add ?inline=1 for inline-open (your backend treats presence of `inline` as inline)
+  const inlineUrl = (url) =>
+    url.includes("?") ? `${url}&inline=1` : `${url}?inline=1`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,46 +82,38 @@ const FileUploader = () => {
     formData.append("html_file", file);
 
     try {
-      const response = await fetch(`${API}`, {
+      const response = await fetch(`${API}/`, {
         method: "POST",
         body: formData,
-        credentials: "include",
+        credentials: "include", // keep if backend checks session
+        headers: { Accept: "application/json" },
       });
 
+      // Try to parse JSON either way so we can surface server messages
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        let msg = "Something went wrong.";
-        try {
-          const data = await response.json();
-          if (data?.error) msg = data.error;
-        } catch (_) {}
-        setError(msg);
+        setError(data?.error || "Something went wrong.");
         return;
       }
 
-      const html = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const links = doc.querySelectorAll("a");
+      // Expecting: { pdf_url, excel_url }
+      const { pdf_url, excel_url } = data;
+      if (!pdf_url && !excel_url) {
+        setError("Server did not return file links. Please try again.");
+        return;
+      }
 
-      const allLinks = Array.from(links).map((link) => ({
-        href: link.href,
-        text: link.textContent,
-      }));
-
-      // Separate file links from "Upload another"
-      const fileLinks = allLinks.filter(
-        (l) => !l.text.includes("Upload another")
-      );
-      const uploadLink = allLinks.find((l) =>
-        l.text.includes("Upload another")
-      );
-
-      setResult({ fileLinks, uploadLink });
+      setResult({
+        pdfUrl: pdf_url || null,
+        excelUrl: excel_url || null,
+      });
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
-      clearFile();
+      clearFileInput();
+      setFile(null);
     }
   };
 
@@ -126,7 +121,7 @@ const FileUploader = () => {
     setResult(null);
     setError(null);
     setFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    clearFileInput();
   };
 
   return (
@@ -175,18 +170,14 @@ const FileUploader = () => {
                     alignItems: "center",
                     gap: 4,
                     p: 2,
-                    border: error ? "2px solid #ef4444" : "2px solid grey", // 🔴 when error
+                    border: error ? "2px solid #ef4444" : "2px solid grey",
                     backgroundColor: error
                       ? "rgba(239,68,68,0.05)"
                       : "transparent",
                   }}
                 >
                   <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 1.5,
-                    }}
+                    sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}
                   >
                     <Box
                       sx={{
@@ -201,11 +192,7 @@ const FileUploader = () => {
                         variant="solid"
                         size="md"
                         startDecorator={<UploadRounded />}
-                        sx={{
-                          px: 2.25,
-                          borderRadius: "md",
-                          fontWeight: 600,
-                        }}
+                        sx={{ px: 2.25, borderRadius: "md", fontWeight: 600 }}
                       >
                         Choose File
                         <input
@@ -213,9 +200,10 @@ const FileUploader = () => {
                           type="file"
                           name="html_file"
                           hidden
-                          accept=".html"
+                          accept=".html,.htm"
                           onChange={handleFileChange}
                           onClick={(e) => {
+                            // allow re-selecting the same file
                             e.currentTarget.value = "";
                           }}
                         />
@@ -236,7 +224,7 @@ const FileUploader = () => {
                               <DescriptionRounded fontSize="small" />
                             }
                             sx={{
-                              maxWidth: 320, // control width of chip
+                              maxWidth: 320,
                               "& .MuiChip-label": {
                                 overflow: "hidden",
                                 textOverflow: "ellipsis",
@@ -251,7 +239,10 @@ const FileUploader = () => {
                             <IconButton
                               variant="plain"
                               color="neutral"
-                              onClick={() => setFile(null)}
+                              onClick={() => {
+                                setFile(null);
+                                clearFileInput();
+                              }}
                               sx={{ "--IconButton-size": "32px" }}
                             >
                               <CloseRounded />
@@ -268,7 +259,6 @@ const FileUploader = () => {
                       )}
                     </Box>
 
-                    {/* Helper text */}
                     <Typography level="body-xs" sx={{ color: "text.tertiary" }}>
                       Accepts <code>.html</code> files. Make sure it’s the
                       payroll export from Toast.
@@ -297,6 +287,7 @@ const FileUploader = () => {
             </Stack>
           </form>
         )}
+
         {error && (
           <Alert color="danger" sx={{ mt: 2 }}>
             {error}
@@ -305,34 +296,35 @@ const FileUploader = () => {
 
         {result && (
           <CardContent>
-            <ul>
-              {result.fileLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="file-link"
-                  >
-                    {link.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            {result.uploadLink && (
-              <div>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    resetForm();
-                  }}
-                  className="upload-another"
+            <Stack spacing={1.5} sx={{ alignItems: "center" }}>
+              {result.pdfUrl && (
+                <Button
+                  component="a"
+                  href={inlineUrl(result.pdfUrl)} // open inline
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="solid"
+                  fullWidth
                 >
-                  {result.uploadLink.text}
-                </a>
-              </div>
-            )}
+                  Open PDF
+                </Button>
+              )}
+              {result.excelUrl && (
+                <Button
+                  component="a"
+                  href={result.excelUrl} // no ?inline => download as attachment
+                  rel="noopener noreferrer"
+                  variant="soft"
+                  fullWidth
+                >
+                  Download Excel
+                </Button>
+              )}
+
+              <Button variant="plain" onClick={resetForm} sx={{ mt: 1 }}>
+                Upload another
+              </Button>
+            </Stack>
           </CardContent>
         )}
       </Card>
