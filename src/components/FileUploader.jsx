@@ -138,7 +138,7 @@ const FileUploader = () => {
         sx={{
           margin: "0 auto",
           padding: 3,
-          borderRadius: "lg",
+          borderRadius: "md",
           boxShadow: "lg",
           textAlign: "center",
         }}
@@ -191,6 +191,7 @@ const FileUploader = () => {
                         alignItems: "center",
                         gap: 2,
                         flexWrap: "wrap",
+                        maxWidth: 350,
                       }}
                     >
                       <Button
