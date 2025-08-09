@@ -15,7 +15,7 @@ import {
 import ForgotPinModal from "./ForgotPinModal";
 
 export const API =
-  import.meta.env.VITE_API_URL || "https:\\0a96bc07f3d2.ngrok-free.app";
+  import.meta.env.VITE_API_URL || "https://0a96bc07f3d2.ngrok-free.app/";
 
 const AccessPage = () => {
   const [email, setEmail] = useState("");
