@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 import "../assets/FileResult.css";
 
-export const API = import.meta.env.VITE_API_URL || import.meta.nev.LOCAL_URL;
+export const API = import.meta.env.VITE_API_URL || import.meta.env.LOCAL_URL;
 
 const FileUploader = () => {
   const [file, setFile] = useState(null);
@@ -125,11 +125,17 @@ const FileUploader = () => {
   };
 
   return (
-    <main>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+      }}
+    >
       <Card
         variant="outlined"
         sx={{
-          maxWidth: 500,
           margin: "0 auto",
           padding: 3,
           borderRadius: "lg",
@@ -342,7 +348,7 @@ const FileUploader = () => {
           </CardContent>
         )}
       </Card>
-    </main>
+    </Box>
   );
 };
 

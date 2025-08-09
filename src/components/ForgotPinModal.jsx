@@ -14,7 +14,7 @@ import {
   ModalDialog,
 } from "@mui/joy";
 
-export const API = import.meta.env.VITE_API_URL || import.meta.nev.LOCAL_URL;
+export const API = import.meta.env.VITE_API_URL || import.meta.env.LOCAL_URL;
 
 const ForgotPinModal = ({ open, onClose, initialEmail = "" }) => {
   const [email, setEmail] = useState(initialEmail);
