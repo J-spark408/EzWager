@@ -5,6 +5,7 @@ import { isAuthed } from "./auth";
 
 export default function RequireAuth({ children }) {
   const [checked, setChecked] = useState(false);
+  const [authed, setAuthed] = useState(isAuthed());
   const [ok, setOk] = useState(false);
   const loc = useLocation();
 
@@ -12,7 +13,18 @@ export default function RequireAuth({ children }) {
     const pass = isAuthed();
     setOk(pass);
     setChecked(true);
+
+    const interval = setInterval(() => {
+      if (!isAuthed()) {
+        setAuthed(false);
+      }
+    }, 10000);
+    return () => clearInterval(interval);
   }, [loc.pathname]);
+
+  if (!authed) {
+    return <Navigate to="/" replace />;
+  }
 
   if (!checked) return null; // or a spinner
   return ok ? children : <Navigate to="/" replace />;

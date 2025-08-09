@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -13,9 +13,10 @@ import {
   CircularProgress,
 } from "@mui/joy";
 import ForgotPinModal from "./ForgotPinModal";
+import { isAuthed } from "./utils/auth";
 
 export const API =
-  import.meta.env.VITE_API_URL || "https://0a96bc07f3d2.ngrok-free.app/";
+  import.meta.env.VITE_API_URL || import.meta.nev.LOCAL_URL;
 
 const AccessPage = () => {
   const [email, setEmail] = useState("");
@@ -30,15 +31,8 @@ const AccessPage = () => {
     /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}(?:\.[A-Za-z]{2,})*$/.test(val.trim());
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem("authenticated");
-    const authTime = localStorage.getItem("authTime");
-    const THIRTY_MINS = 1 * 60 * 1000;
-
-    const expired =
-      !authTime || Date.now() - parseInt(authTime, 10) > THIRTY_MINS;
-
-    if (isAuthenticated && !expired) {
-      navigate("/upload");
+    if (isAuthed()) {
+      navigate("/upload", { replace: true }); // prevent back nav to Access
     }
   }, [navigate]);
 

@@ -2,11 +2,11 @@
 const TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
 export function isAuthed() {
-  const a = localStorage.getItem("authenticated");
-  const t = localStorage.getItem("authTime");
-  const e = localStorage.getItem("email");
-  if (!a || !t || !e) return false;
-  const expired = Date.now() - parseInt(t, 10) > TIMEOUT_MS;
+  const isAuthenticated = localStorage.getItem("authenticated");
+  const authTime = localStorage.getItem("authTime");
+  const email = localStorage.getItem("email");
+  if (!isAuthenticated || !authTime || !email) return false;
+  const expired = Date.now() - parseInt(authTime, 10) > TIMEOUT_MS;
   if (expired) {
     localStorage.removeItem("authenticated");
     localStorage.removeItem("authTime");
