@@ -22,7 +22,7 @@ import {
 } from "@mui/icons-material";
 import "../assets/FileResult.css";
 
-export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+export const API = import.meta.env.VITE_API_URL || "https://96e1ba4d28b6.ngrok-free.app/";
 
 const FileUploader = () => {
   const [file, setFile] = useState(null);

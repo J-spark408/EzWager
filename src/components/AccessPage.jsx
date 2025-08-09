@@ -14,7 +14,7 @@ import {
 } from "@mui/joy";
 import ForgotPinModal from "./ForgotPinModal";
 
-export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+export const API = import.meta.env.VITE_API_URL || "https://96e1ba4d28b6.ngrok-free.app/";
 
 const AccessPage = () => {
   const [email, setEmail] = useState("");
@@ -53,18 +53,15 @@ const AccessPage = () => {
     }
 
     try {
-      const res = await fetch(
-        `https://96e1ba4d28b6.ngrok-free.app/api/check-pin`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            email: normalizedEmail,
-            pin,
-          }),
-        }
-      );
+      const res = await fetch(`${API}/api/check-pin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email: normalizedEmail,
+          pin,
+        }),
+      });
 
       const data = await res.json();
       if (res.ok && data.success) {
