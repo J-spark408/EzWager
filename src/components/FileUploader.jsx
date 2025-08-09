@@ -39,7 +39,7 @@ const FileUploader = () => {
     const email = localStorage.getItem("email");
     const authTime = localStorage.getItem("authTime");
 
-    const ONE_MINUTE = 1 * 60 * 1000; // change back to 30 * 60 * 1000 later
+    const ONE_MINUTE = 30 * 60 * 1000; // change back to 30 * 60 * 1000 later
     const expired =
       !authTime || Date.now() - parseInt(authTime, 10) > ONE_MINUTE;
 
@@ -296,33 +296,47 @@ const FileUploader = () => {
 
         {result && (
           <CardContent>
-            <Stack spacing={1.5} sx={{ alignItems: "center" }}>
+            <Stack spacing={2} sx={{ alignItems: "center" }}>
               {result.pdfUrl && (
-                <Button
-                  component="a"
-                  href={inlineUrl(result.pdfUrl)} // open inline
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="solid"
-                  fullWidth
-                >
-                  Open PDF
-                </Button>
-              )}
-              {result.excelUrl && (
-                <Button
-                  component="a"
-                  href={result.excelUrl} // no ?inline => download as attachment
-                  rel="noopener noreferrer"
-                  variant="soft"
-                  fullWidth
-                >
-                  Download Excel
-                </Button>
+                <Stack spacing={1} sx={{ width: "75%" }}>
+                  <Button
+                    component="a"
+                    href={inlineUrl(result.pdfUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="outlined"
+                    size="lg"
+                  >
+                    📂 Open PDF
+                  </Button>
+                  <Button
+                    component="a"
+                    href={result.pdfUrl}
+                    rel="noopener noreferrer"
+                    variant="outlined"
+                    size="lg"
+                  >
+                    ⬇️ Download PDF
+                  </Button>
+                  <Button
+                    component="a"
+                    href={result.excelUrl}
+                    rel="noopener noreferrer"
+                    variant="outlined"
+                    size="lg"
+                  >
+                    ⬇️ Download Excel
+                  </Button>
+                </Stack>
               )}
 
-              <Button variant="plain" onClick={resetForm} sx={{ mt: 1 }}>
-                Upload another
+              <Button
+                onClick={resetForm}
+                variant="solid"
+                size="md"
+                sx={{ mt: 2 }}
+              >
+                🔁 Upload another
               </Button>
             </Stack>
           </CardContent>
