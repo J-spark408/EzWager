@@ -136,11 +136,17 @@ const FileUploader = () => {
       <Card
         variant="outlined"
         sx={{
+          width: "100%",
+          maxWidth: 420,
+          minHeight: 400,
           margin: "0 auto",
           padding: 3,
           borderRadius: "md",
           boxShadow: "lg",
           textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
         }}
       >
         <Typography level="h2" sx={{ mb: 2 }}>
@@ -148,7 +154,7 @@ const FileUploader = () => {
         </Typography>
 
         {result ? (
-          <Typography level="h3" sx={{ mb: 2, color: "success.600" }}>
+          <Typography level="h3" sx={{ mb: 3, mt: 2, color: "success.600" }}>
             ✅ Files Created
           </Typography>
         ) : (
@@ -191,7 +197,6 @@ const FileUploader = () => {
                         alignItems: "center",
                         gap: 2,
                         flexWrap: "wrap",
-                        maxWidth: 350,
                       }}
                     >
                       <Button
@@ -303,9 +308,9 @@ const FileUploader = () => {
 
         {result && (
           <CardContent>
-            <Stack spacing={2} sx={{ alignItems: "center" }}>
+            <Stack spacing={4.5} sx={{ alignItems: "center" }}>
               {result.pdfUrl && (
-                <Stack spacing={1} sx={{ width: "75%" }}>
+                <Stack spacing={1.5} sx={{ width: "100%" }}>
                   <Button
                     component="a"
                     href={inlineUrl(result.pdfUrl)}

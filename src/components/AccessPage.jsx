@@ -15,8 +15,7 @@ import {
 import ForgotPinModal from "./ForgotPinModal";
 import { isAuthed } from "./utils/auth";
 
-export const API =
-  import.meta.env.VITE_API_URL || import.meta.env.LOCAL_URL;
+export const API = import.meta.env.VITE_API_URL || import.meta.env.LOCAL_URL;
 
 const AccessPage = () => {
   const [email, setEmail] = useState("");
@@ -88,19 +87,25 @@ const AccessPage = () => {
       <Card
         variant="outlined"
         sx={{
-          maxWidth: 360,
           width: "100%",
-          p: 3,
-          borderRadius: "lg",
-          boxShadow: "md",
+          maxWidth: 420,
+          minHeight: 400,
+          margin: "0 auto",
+          padding: 3,
+          borderRadius: "md",
+          boxShadow: "lg",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
         }}
       >
-        <Typography level="h4" sx={{ mb: 2, textAlign: "center" }}>
+        <Typography level="h4" sx={{ mb: 4, textAlign: "center" }}>
           Access Your EzWage
         </Typography>
 
         <form onSubmit={handleSubmit}>
-          <FormControl sx={{ mb: 2 }}>
+          <FormControl sx={{ mb: 0.5 }}>
             <FormLabel>Email</FormLabel>
             <Input
               value={email}
@@ -123,7 +128,7 @@ const AccessPage = () => {
             {emailErr && <FormHelperText>{emailErr}</FormHelperText>}
           </FormControl>
 
-          <FormControl sx={{ mb: 2 }}>
+          <FormControl sx={{ mb: 3 }}>
             <FormLabel>PIN</FormLabel>
             <Input
               type="password"
@@ -163,7 +168,7 @@ const AccessPage = () => {
           <Button
             variant="none"
             size="sm"
-            sx={{ mt: 2, display: "flex", justifySelf: "center" }}
+            sx={{ mt: 5, display: "flex", justifySelf: "center" }}
             onClick={() => setForgotOpen(true)}
           >
             Forgot PIN?
