@@ -139,7 +139,7 @@ const AccessPage = () => {
               size="lg"
               slotProps={{
                 input: {
-                  maxLength: 6,
+                  maxLength: 10,
                   style: { textAlign: "center", letterSpacing: "0.35em" },
                 },
               }}
