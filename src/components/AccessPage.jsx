@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Box,
   Card,
@@ -14,7 +14,8 @@ import {
 } from "@mui/joy";
 import ForgotPinModal from "./ForgotPinModal";
 
-export const API = import.meta.env.VITE_API_URL || "https://96e1ba4d28b6.ngrok-free.app/";
+export const API =
+  import.meta.env.VITE_API_URL || "https://96e1ba4d28b6.ngrok-free.app/";
 
 const AccessPage = () => {
   const [email, setEmail] = useState("");

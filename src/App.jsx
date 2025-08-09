@@ -1,17 +1,23 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AccessPage from "./components/AccessPage";
-import FileUpload from "./components/FileUploader";
+// src/App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AccessPage from "./components/FileUploader";
+import FileUploader from "./components/FileUploader";
+import RequireAuth from "./components/utils/RequireAuth";
 
-function App() {
+export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<AccessPage />} />
-        <Route path="/upload" element={<FileUpload />} />
+        <Route
+          path="/upload"
+          element={
+            <RequireAuth>
+              <FileUploader />
+            </RequireAuth>
+          }
+        />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
-
-export default App;
