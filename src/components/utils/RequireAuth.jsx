@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { isAuthed } from "./auth";
 
-export default function RequireAuth({ children }) {
+const RequireAuth = ({ children }) => {
   const [checked, setChecked] = useState(false);
   const [authed, setAuthed] = useState(isAuthed());
   const [ok, setOk] = useState(false);
@@ -29,3 +29,5 @@ export default function RequireAuth({ children }) {
   if (!checked) return null; // or a spinner
   return ok ? children : <Navigate to="/" replace />;
 }
+
+export default RequireAuth;

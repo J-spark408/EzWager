@@ -1,7 +1,7 @@
 // src/auth.js
 const TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
-export function isAuthed() {
+export const isAuthed = () => {
   const isAuthenticated = localStorage.getItem("authenticated");
   const authTime = localStorage.getItem("authTime");
   const email = localStorage.getItem("email");

@@ -11,6 +11,7 @@ import {
   CircularProgress,
   FormLabel,
   IconButton,
+  Link,
   Stack,
   Tooltip,
   Typography,
@@ -21,8 +22,9 @@ import {
   UploadRounded,
 } from "@mui/icons-material";
 import "../assets/FileResult.css";
+import InstructionModal from "./InstructionModal";
 
-export const API = import.meta.env.VITE_API_URL || import.meta.env.LOCAL_URL;
+export const API = import.meta.env.API_URL || import.meta.env.LOCAL_URL;
 
 const FileUploader = () => {
   const [file, setFile] = useState(null);
@@ -30,6 +32,7 @@ const FileUploader = () => {
   const [result, setResult] = useState(null); // { pdfUrl, excelUrl }
   const [error, setError] = useState(null);
   const [shake, setShake] = useState(false);
+  const [instructionOpen, setInstructionOpen] = useState(false);
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -172,7 +175,9 @@ const FileUploader = () => {
                 >
                   Upload Toast Payroll
                 </FormLabel>
-
+                <Link sx={{}} onClick={() => setInstructionOpen(true)}>
+                  How to download file from Toast Payroll
+                </Link>
                 <Box
                   className={shake ? "shake" : ""}
                   sx={{
@@ -354,6 +359,10 @@ const FileUploader = () => {
           </CardContent>
         )}
       </Card>
+      <InstructionModal
+        open={instructionOpen}
+        onClose={() => setInstructionOpen(false)}
+      />
     </Box>
   );
 };

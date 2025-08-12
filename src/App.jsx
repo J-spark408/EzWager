@@ -1,10 +1,9 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AccessPage from "./components/AccessPage";
 import FileUploader from "./components/FileUploader";
 import RequireAuth from "./components/utils/RequireAuth";
 
-export default function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -20,4 +19,6 @@ export default function App() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
+
+export default App;
