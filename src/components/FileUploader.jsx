@@ -24,7 +24,7 @@ import {
 import "../assets/FileResult.css";
 import InstructionModal from "./InstructionModal";
 
-export const API = import.meta.env.API_URL || import.meta.env.LOCAL_URL;
+export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const FileUploader = () => {
   const [file, setFile] = useState(null);

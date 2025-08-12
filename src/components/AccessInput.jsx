@@ -14,7 +14,7 @@ import {
 import ForgotPinModal from "./ForgotPinModal";
 import { isAuthed } from "./utils/auth";
 
-export const API = import.meta.env.API_URL || import.meta.env.LOCAL_URL;
+export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const AccessInput = () => {
   const [email, setEmail] = useState("");
@@ -75,103 +75,99 @@ const AccessInput = () => {
   };
 
   return (
-      <Card
-        variant="outlined"
-        sx={{
-          width: "100%",
-          maxWidth: 420,
-          minHeight: 400,
-          margin: "0 auto",
-          padding: 3,
-          borderRadius: "md",
-          boxShadow: "lg",
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <Typography level="h4" sx={{ mb: 4, textAlign: "center" }}>
-          Access Your EzWage
-        </Typography>
+    <Card
+      variant="outlined"
+      sx={{
+        width: "100%",
+        maxWidth: 420,
+        minHeight: 400,
+        margin: "0 auto",
+        padding: 3,
+        borderRadius: "md",
+        boxShadow: "lg",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <Typography level="h4" sx={{ mb: 4, textAlign: "center" }}>
+        Access Your EzWage
+      </Typography>
 
-        <form onSubmit={handleSubmit}>
-          <FormControl sx={{ mb: 0.5 }}>
-            <FormLabel>Email</FormLabel>
-            <Input
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (emailErr) setEmailErr("");
-              }}
-              slotProps={{
-                input: {
-                  style: { textAlign: "center" },
-                  pattern:
-                    "^[^\\s@]+@[^\\s@]+\\.[A-Za-z]{2,}(?:\\.[A-Za-z]{2,})*$",
-                  autoComplete: "email",
-                },
-              }}
-              placeholder="you@company.com"
-              type="email"
-              size="lg"
-            />
-            {emailErr && <FormHelperText>{emailErr}</FormHelperText>}
-          </FormControl>
-
-          <FormControl sx={{ mb: 3 }}>
-            <FormLabel>PIN</FormLabel>
-            <Input
-              type="password"
-              placeholder="********"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              required
-              size="lg"
-              slotProps={{
-                input: {
-                  maxLength: 10,
-                  style: { textAlign: "center", letterSpacing: "0.35em" },
-                },
-              }}
-            />
-          </FormControl>
-
-          {error && (
-            <Alert color="danger" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-
-          <Button
-            type="submit"
-            color="primary"
+      <form onSubmit={handleSubmit}>
+        <FormControl sx={{ mb: 0.5 }}>
+          <FormLabel>Email</FormLabel>
+          <Input
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailErr) setEmailErr("");
+            }}
+            slotProps={{
+              input: {
+                style: { textAlign: "center" },
+                pattern:
+                  "^[^\\s@]+@[^\\s@]+\\.[A-Za-z]{2,}(?:\\.[A-Za-z]{2,})*$",
+                autoComplete: "email",
+              },
+            }}
+            placeholder="you@company.com"
+            type="email"
             size="lg"
-            fullWidth
-            disabled={loading}
-          >
-            {loading ? (
-              <CircularProgress size="sm" color="neutral" />
-            ) : (
-              "Submit"
-            )}
-          </Button>
-          <Button
-            variant="none"
-            size="sm"
-            sx={{ mt: 5, display: "flex", justifySelf: "center" }}
-            onClick={() => setForgotOpen(true)}
-          >
-            Forgot PIN?
-          </Button>
-
-          <ForgotPinModal
-            open={forgotOpen}
-            onClose={() => setForgotOpen(false)}
-            initialEmail={email}
           />
-        </form>
-      </Card>
+          {emailErr && <FormHelperText>{emailErr}</FormHelperText>}
+        </FormControl>
+
+        <FormControl sx={{ mb: 3 }}>
+          <FormLabel>PIN</FormLabel>
+          <Input
+            type="password"
+            placeholder="********"
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            required
+            size="lg"
+            slotProps={{
+              input: {
+                maxLength: 10,
+                style: { textAlign: "center", letterSpacing: "0.35em" },
+              },
+            }}
+          />
+        </FormControl>
+
+        {error && (
+          <Alert color="danger" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        <Button
+          type="submit"
+          color="primary"
+          size="lg"
+          fullWidth
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size="sm" color="neutral" /> : "Submit"}
+        </Button>
+        <Button
+          variant="none"
+          size="sm"
+          sx={{ mt: 5, display: "flex", justifySelf: "center" }}
+          onClick={() => setForgotOpen(true)}
+        >
+          Forgot PIN?
+        </Button>
+
+        <ForgotPinModal
+          open={forgotOpen}
+          onClose={() => setForgotOpen(false)}
+          initialEmail={email}
+        />
+      </form>
+    </Card>
   );
 };
 

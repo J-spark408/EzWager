@@ -119,7 +119,7 @@ const InstructionModal = ({ open, onClose }) => {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={onClose} variant="contained">
+            <Button onClick={onClose} variant="contained" size="large">
               Done
             </Button>
           </DialogActions>
