@@ -42,16 +42,16 @@ const InstructionModal = ({ open, onClose }) => {
   const theme = React.useMemo(
     () =>
       createTheme({
-        shape: { borderRadius: 14 },
+        shape: { borderRadius: 2 },
         components: {
           MuiDialog: {
             styleOverrides: {
-              paper: { borderRadius: 16 },
+              paper: { borderRadius: 5 },
             },
           },
           MuiButton: {
             styleOverrides: {
-              root: { textTransform: "none", borderRadius: 12 },
+              root: { textTransform: "none", borderRadius: 4, width: "25%" },
             },
           },
         },
