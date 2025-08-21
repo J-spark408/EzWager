@@ -23,6 +23,7 @@ import {
 } from "@mui/icons-material";
 import "../assets/FileResult.css";
 import InstructionModal from "./InstructionModal";
+import FileInput from "./FileInput";
 
 export const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -33,9 +34,25 @@ const FileUploader = () => {
   const [error, setError] = useState(null);
   const [shake, setShake] = useState(false);
   const [instructionOpen, setInstructionOpen] = useState(false);
+  const [claimNumber, setClaimNumber] = useState("");
+  const [dateLoss, setDateLoss] = useState("");
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
+
+  function isValidMDY(str) {
+    const [mm, dd, yyyy] = str.split("/").map(Number);
+    if (!mm || !dd || !yyyy) return false;
+    const m = String(mm).padStart(2, "0");
+    const d = String(dd).padStart(2, "0");
+    const y = String(yyyy);
+    const dt = new Date(`${y}-${m}-${d}T00:00:00Z`);
+    return (
+      dt.getUTCFullYear() === yyyy &&
+      dt.getUTCMonth() + 1 === mm &&
+      dt.getUTCDate() === dd
+    );
+  }
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("authenticated");
@@ -78,6 +95,19 @@ const FileUploader = () => {
       return;
     }
 
+    if (claimNumber && claimNumber.length !== 10) {
+      setError("Claim number must be exactly 10 characters.");
+      return;
+    }
+    if (
+      dateLoss &&
+      (!/^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/.test(dateLoss) ||
+        !isValidMDY(dateLoss))
+    ) {
+      setError("Date must be a real date in MM/DD/YYYY.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -85,7 +115,26 @@ const FileUploader = () => {
     formData.append("html_file", file);
 
     try {
-      const response = await fetch(`${API}/`, {
+      const input_res = await fetch(`${API}/input`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          claimNumber,
+          dateLoss,
+        }),
+      });
+      const input_data = await input_res.json().catch(() => ({}));
+
+      if (!input_res.ok && !input_data.success) {
+        setError(input_data?.error || "Something went wrong.");
+        return;
+      }
+
+      const response = await fetch(`${API}/upload`, {
         method: "POST",
         body: formData,
         credentials: "include", // keep if backend checks session
@@ -280,6 +329,12 @@ const FileUploader = () => {
                       Accepts <code>.html</code> files. Make sure it’s the
                       payroll export from Toast.
                     </Typography>
+                    {file && (
+                      <FileInput
+                        setClaimNumber={setClaimNumber}
+                        setDateLoss={setDateLoss}
+                      />
+                    )}
                   </Box>
                 </Box>
               </Box>
