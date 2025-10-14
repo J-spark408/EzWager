@@ -173,6 +173,8 @@ const FileUploader = () => {
     setResult(null);
     setError(null);
     setFile(null);
+    setClaimNumber("");
+    setDateLoss("");
     clearFileInput();
   };
 
